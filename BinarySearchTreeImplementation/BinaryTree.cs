@@ -1227,6 +1227,16 @@ namespace BinarySearchTreeImplementation
                 FindBiggestPerfectBinaryTree(rootNode.RightNode);
             }
         }
+        /// <summary>
+        /// There can be two cases
+        /// 1. If diameter passes through root the diameter will be height of left subtree+ height of right subtree +1
+        /// 2. If diameter doesnt pass through root we will recursively call the left and right subtree as root and 
+        /// consider them as root nodes and calculate the diameters.
+        ///     Every time we get the diameter of left and right subtree we will keep the bigger one and compare them with root as diameter value
+        ///     . The bigger one will be answer
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <returns></returns>
         public int DiameterOfBinaryTree(Node rootNode)
         {
             int leftHeight = 0, rightHeight = 0;
@@ -1244,6 +1254,59 @@ namespace BinarySearchTreeImplementation
             int finalDiameter = Math.Max(leftHeight + rightHeight + 1, Math.Max(leftDiameter, rightDiameter));
             return finalDiameter;
         }
-
+        /// <summary>
+        /// This will be done recursively. A binary tree is considered as mirror of another tree if
+        /// the left child of tree 1 is right child of tree2 and right child of tree 1 is left child of tree 2
+        /// Check for the following conditions
+        /// 1. If both trees are null, answer is true
+        /// 2. If one tree is null and other is not answer is false
+        /// 3. If node 1 data is not equal to node 2 data answer is false
+        /// 4. If 3rd condition is not true then we will call the method again with node 1 left and node 2 right, node 1 right and node2 left.
+        /// Basically we are checking for subtree
+        /// 
+        /// </summary>
+        /// <param name="rootNode1"></param>
+        /// <param name="rootNode2"></param>
+        /// <returns></returns>
+        public bool CheckIfTwoBinaryTreesAreMirror(Node rootNode1, Node rootNode2)
+        {
+            if(rootNode1==null && rootNode2==null)
+            {
+                return true;
+            }
+            if (rootNode1 == null || rootNode2 == null)
+            {
+                return false;
+            }
+            if(rootNode1.Data==rootNode2.Data)
+            {
+                if(CheckIfTwoBinaryTreesAreMirror(rootNode1.LeftNode,rootNode2.RightNode)&&CheckIfTwoBinaryTreesAreMirror(rootNode1.RightNode,rootNode2.LeftNode))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// Just pass the left subtree and right subtree to the CheckIfTwoBinaryTreesAreMirror method
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <returns></returns>
+        public bool CheckIfABinaryTreeIsSymmetric(Node rootNode)
+        {
+            if(rootNode==null)
+            {
+                return false;
+            }
+            if(rootNode.LeftNode==null && rootNode.RightNode==null)
+            {
+                return true;
+            }
+            if (rootNode.LeftNode == null || rootNode.RightNode == null)
+            {
+                return false;
+            }
+            return CheckIfTwoBinaryTreesAreMirror(rootNode.LeftNode, rootNode.RightNode);
+        }
     }
 }

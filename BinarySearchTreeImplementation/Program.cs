@@ -131,15 +131,22 @@ namespace BinarySearchTreeImplementation
             binaryTree.Root.LeftNode = new Node();
             binaryTree.Root.LeftNode.Data = 9;
             binaryTree.Root.RightNode = new Node();
-            binaryTree.Root.RightNode.Data = 13;
+            binaryTree.Root.RightNode.Data = 9;
+            BinaryTree binaryTree2 = new BinaryTree();
+            binaryTree2.Root = new Node();
+            binaryTree2.Root.Data = 44;
+            binaryTree2.Root.LeftNode = new Node();
+            binaryTree2.Root.LeftNode.Data = 13;
+            binaryTree2.Root.RightNode = new Node();
+            binaryTree2.Root.RightNode.Data = 9;
             binaryTree.Root.LeftNode.LeftNode = new Node();
             binaryTree.Root.LeftNode.LeftNode.Data = 4;
-            binaryTree.Root.LeftNode.RightNode = new Node();
-            binaryTree.Root.LeftNode.RightNode.Data = 5;
+            //binaryTree.Root.LeftNode.RightNode = new Node();
+            //binaryTree.Root.LeftNode.RightNode.Data = 5;
             binaryTree.Root.RightNode.LeftNode = new Node();
-            binaryTree.Root.RightNode.LeftNode.Data = 6;
-            binaryTree.Root.RightNode.RightNode = new Node();
-            binaryTree.Root.RightNode.RightNode.Data = 7;
+            binaryTree.Root.RightNode.LeftNode.Data = 4;
+            //binaryTree.Root.RightNode.RightNode = new Node();
+            //binaryTree.Root.RightNode.RightNode.Data = 7;
             // binaryTree.InSumTree(binaryTree.Root);
             //binaryTree.FindAllCousinsInBinaryTree(binaryTree.Root);
             // binaryTree.FindCousinOfGivenNodeInBinaryTree(binaryTree.Root,4);
@@ -149,8 +156,10 @@ namespace BinarySearchTreeImplementation
             //Console.WriteLine(binaryTree.IsPerfectBinaryTree(binaryTree.Root));
             // binaryTree.FindBiggestPerfectBinaryTree(binaryTree.Root);
             //Console.WriteLine(binaryTree.sList);
-            Console.WriteLine(binaryTree.DiameterOfBinaryTree(binaryTree.Root)); 
-            
+            //Console.WriteLine(binaryTree.DiameterOfBinaryTree(binaryTree.Root)); 
+            // Console.WriteLine(binaryTree.CheckIfTwoBinaryTreesAreMirror(binaryTree.Root,binaryTree2.Root));
+            Console.WriteLine(binaryTree.CheckIfABinaryTreeIsSymmetric(binaryTree.Root));
+
 
         }
     }
