@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BinarySearchTreeImplementation
@@ -11,6 +12,7 @@ namespace BinarySearchTreeImplementation
         public Queue<Node> queue = new Queue<Node>();
         private Node rightLeafNode = new Node();
         public Node LastLeafNode = new Node();
+        public int Count { get; set; }
         public void Add(int value)
         {
             if (this.Root == null)
@@ -382,7 +384,8 @@ namespace BinarySearchTreeImplementation
             }
         }
         /// <summary>
-        /// 1. Start with an empty queue and empty stack. The idea is to do level order traversal and push the items to stack so they can be read in opposite order
+        /// 1. Start with an empty queue and empty stack. The idea is to do level order traversal and push the items to stack 
+        /// so they can be read in opposite order
         /// 
         /// </summary>
         /// <param name="rootNode"></param>
@@ -394,7 +397,7 @@ namespace BinarySearchTreeImplementation
             {
                 localQueue.Enqueue(rootNode);
             }
-            while(localQueue.Count>0)
+            while (localQueue.Count > 0)
             {
                 if (localQueue.Peek().LeftNode != null) localQueue.Enqueue(localQueue.Peek().LeftNode);
                 if (localQueue.Peek().RightNode != null) localQueue.Enqueue(localQueue.Peek().RightNode);
@@ -402,7 +405,7 @@ namespace BinarySearchTreeImplementation
             }
             Console.WriteLine("ReverseLevelOrderTraversal");
             Console.WriteLine("------------------------------");
-            while (localStack.Count>0)
+            while (localStack.Count > 0)
             {
                 Console.WriteLine(localStack.Pop().Data);
             }
@@ -416,21 +419,22 @@ namespace BinarySearchTreeImplementation
         //        temp=temp->left
         //  print(temp)
         //    }
-           //Case 2: If node doesn't have a right subtree
-           /*
-            s=root
-           while(s->data!=p->data)
-                if(p->data<=s->data)
-                    store=s
-                    s=s->left
-                else
-                    s=s->right
-           print store
-            */
+        //Case 2: If node doesn't have a right subtree
+        /*
+         s=root
+        while(s->data!=p->data)
+             if(p->data<=s->data)
+                 store=s
+                 s=s->left
+             else
+                 s=s->right
+        print store
+         */
         /// </summary>
         /// <param name="data"></param>
-        public void FindInorderSuccessor(Node rootNode, int data)
+        public Node FindInorderSuccessor(Node rootNode, int? data)
         {
+            Node result = new Node();
             Queue<Node> localQueue = new Queue<Node>();
             Node startNode = new Node();
             Node tempNode = new Node();
@@ -443,7 +447,7 @@ namespace BinarySearchTreeImplementation
             {
                 if (localQueue.Peek().LeftNode != null) localQueue.Enqueue(localQueue.Peek().LeftNode);
                 if (localQueue.Peek().RightNode != null) localQueue.Enqueue(localQueue.Peek().RightNode);
-                if(localQueue.Peek().Data==data)
+                if (localQueue.Peek().Data == data)
                 {
                     //once the node is found store it and break out of loop
                     startNode = localQueue.Dequeue();
@@ -455,24 +459,34 @@ namespace BinarySearchTreeImplementation
                 }
             }
             //Traverse the right sub tree of the start node to LEFT until you reach a null and that will be the answer.
-            if(startNode.RightNode!=null)
+            if (startNode.RightNode != null)
             {
                 tempNode = startNode.RightNode;
-                while(tempNode.LeftNode!=null)
+                while (tempNode.LeftNode != null)
                 {
+                    //this condition is needed for reverse morris traversal
+                    if (tempNode.LeftNode == startNode)
+                    {
+                        break;
+                    }
                     tempNode = tempNode.LeftNode;
                 }
-                Console.WriteLine("Inorder successor is "+tempNode.Data);
+
+                //Console.WriteLine("Inorder successor is " + tempNode.Data);
+                return tempNode;
             }
-            else if(startNode.RightNode==null)
+            //if the start node doesn't have a left subtree then start from root again and run a loop till you hit the start node
+            //every time you make a left turn while searching for start node store it because its a potential candidate for answer
+            //once you reach start node print the stored variable.
+            else if (startNode.RightNode == null)
             {
-                int? result = 0;
+
                 tempNode = rootNode;
-                while (tempNode.Data!=startNode.Data)
+                while (tempNode.Data != startNode.Data)
                 {
-                    if(startNode.Data<=tempNode.Data)
+                    if (startNode.Data <= tempNode.Data)
                     {
-                        result = tempNode.Data;
+                        result = tempNode;
                         tempNode = tempNode.LeftNode;
 
                     }
@@ -481,8 +495,10 @@ namespace BinarySearchTreeImplementation
                         tempNode = tempNode.RightNode;
                     }
                 }
-                Console.WriteLine("Inorder successor is "+result);
+                // Console.WriteLine("Inorder successor is " + result.Data);
+
             }
+            return result;
         }
         /// <summary>
         /// This is solved using level by level traversal algorithm. Height of an empty tree is -1 so we will initialize our variable to -1
@@ -502,11 +518,11 @@ namespace BinarySearchTreeImplementation
         {
             int height = -1;
             Queue<Node> queue = new Queue<Node>();
-            if(rootNode==null)
+            if (rootNode == null)
             {
                 return;
             }
-          
+
             if (queue.Count == 0 && rootNode != null)
             {
                 queue.Enqueue(rootNode);
@@ -520,21 +536,623 @@ namespace BinarySearchTreeImplementation
                     if (queue.Peek().LeftNode != null) queue.Enqueue(queue.Peek().LeftNode);
                     if (queue.Peek().RightNode != null) queue.Enqueue(queue.Peek().RightNode);
                     queue.Dequeue();
-                    
+
                 }
                 else if (queue.Peek() == null)
                 {
                     queue.Dequeue();
                     height++;
-                    if(queue.Count>0 && queue.Peek()!=null)
-                    queue.Enqueue(null);
+                    if (queue.Count > 0 && queue.Peek() != null)
+                        queue.Enqueue(null);
                 }
             }
-            Console.WriteLine("Height of tree is "+height);
+            Console.WriteLine("Height of tree is " + height);
 
         }
 
+        public void PopulateInorderSuccessorForAllNodes()
+        {
 
+        }
+        public Node FindInorderPredecessor(Node rootNode, int? data)
+        {
+            Node result = new Node();
+            Queue<Node> localQueue = new Queue<Node>();
+            Node startNode = new Node();
+            Node tempNode = new Node();
+            if (localQueue.Count == 0 && rootNode != null)
+            {
+                localQueue.Enqueue(rootNode);
+            }
+            //Do an inorder traversal to find the node for which we want to find the inorder successor
+            while (localQueue.Count > 0)
+            {
+                if (localQueue.Peek().LeftNode != null) localQueue.Enqueue(localQueue.Peek().LeftNode);
+                if (localQueue.Peek().RightNode != null) localQueue.Enqueue(localQueue.Peek().RightNode);
+                if (localQueue.Peek().Data == data)
+                {
+                    //once the node is found store it and break out of loop
+                    startNode = localQueue.Dequeue();
+                    break;
+                }
+                else
+                {
+                    localQueue.Dequeue();
+                }
+            }
+            //Traverse the left sub tree of the start node to RIGHT until you reach a null and that will be the answer.
+            if (startNode.LeftNode != null)
+            {
+                tempNode = startNode.LeftNode;
+                while (tempNode.RightNode != null)
+                {
+                    //this condition is needed for morris traversal
+                    if (tempNode.RightNode == startNode)
+                    {
+                        return tempNode;
+                    }
+                    tempNode = tempNode.RightNode;
+                }
+                //  Console.WriteLine("Inorder predecessor is " + tempNode.Data);
+                result = tempNode;
+            }
+            //if the start node doesn't have a left subtree then start from root again and run a loop till you hit the start node
+            //every time you make a right turn while searching for start node store it because its a potential candidate for answer
+            //once you reach start node print the stored variable.
+            else if (startNode.LeftNode == null)
+            {
+
+                tempNode = rootNode;
+                while (tempNode.Data != startNode.Data)
+                {
+                    if (startNode.Data > tempNode.Data)
+                    {
+                        result = tempNode;
+                        tempNode = tempNode.RightNode;
+
+                    }
+                    else
+                    {
+                        tempNode = tempNode.LeftNode;
+                    }
+                }
+                // Console.WriteLine("Inorder predecessor is " + result.Data);
+
+            }
+            return result;
+        }
+        /// <summary>
+        /// 1. Initialize rootNode to currentpointer node. This current pointer node will be used for traversal
+        /// 2. Start a loop for currentpointer node not null
+        ///         3. Check if current pointer left child is null print current pointer
+        ///             4. Set current pointer to right child and continue the loop
+        ///         5. If current pointer left child is not null. Find the inorder predecessor of current node. This inorder predecessor is different
+        ///         from normal. We have to modify the case 1 where we traverse the right nodes of the left subtree till we find null
+        ///         the modification is to look for either null or start node. The reason is we make temporary right child which looks like a loop. 
+        ///         This connection will be made in step 6.
+        ///         6. If predecessor right node is null then set the predecessor right node as current pointer (this is the loop)
+        ///              7. move left by setting current pointer to current pointer left child.
+        ///          8. If predecessor right node is not null set predecessor right node to null (break the loop)
+        ///                9. print current pointer data
+        ///                10. set current pointer to right child
+        ///  11. Repeat the loop in step 2
+        /// </summary>
+        /// <param name="rootNode"></param>
+        public void MorrisTraversal(Node rootNode)
+        {
+            Node currentPointer = new Node();
+            Node predecessor = new Node();
+            currentPointer = rootNode;
+            while (currentPointer != null)
+            {
+                if (currentPointer.LeftNode == null)
+                {
+                    Console.WriteLine(currentPointer.Data);
+                    currentPointer = currentPointer.RightNode;
+                }
+                else
+                {
+                    //predecessor = currentPointer.LeftNode;
+                    //while (predecessor.RightNode != null && predecessor.RightNode != currentPointer)
+                    //{
+                    //    predecessor = predecessor.RightNode;
+                    //}
+                    predecessor = FindInorderPredecessor(currentPointer, currentPointer.Data);
+                    if (predecessor.RightNode == null)
+                    {
+                        predecessor.RightNode = currentPointer;
+                        currentPointer = currentPointer.LeftNode;
+                    }
+                    else
+                    {
+                        predecessor.RightNode = null;
+                        Console.WriteLine(currentPointer.Data);
+                        currentPointer = currentPointer.RightNode;
+                    }
+                }
+            }
+        }
+
+        public void ReverseMorrisTraversal(Node rootNode)
+        {
+            Console.WriteLine("Reverse Morris Traversal");
+            Node currentPointer = new Node();
+            Node successor = new Node();
+            Node previouslyVisitedNode = new Node();
+            currentPointer = rootNode;
+            while (currentPointer != null)
+            {
+                if (currentPointer.RightNode == null)
+                {
+                    if (previouslyVisitedNode.Data == null)
+                    {
+                        previouslyVisitedNode.Data = currentPointer.Data;
+                    }
+                    if (previouslyVisitedNode.Data != currentPointer.Data)
+                        Console.WriteLine("Next of {0} is {1} ", previouslyVisitedNode.Data, currentPointer.Data);
+                    currentPointer = currentPointer.LeftNode;
+                }
+                else
+                {
+                    successor = FindInorderSuccessor(currentPointer, currentPointer.Data);
+                    if (successor.LeftNode == null)
+                    {
+                        successor.LeftNode = currentPointer;
+                        currentPointer = currentPointer.RightNode;
+                    }
+                    else
+                    {
+                        successor.LeftNode = null;
+                        Console.WriteLine(currentPointer.Data);
+                        currentPointer = currentPointer.LeftNode;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Simplest way to solve this is using preorder traversal and 
+        /// counting the number of nodes you pass which are greater than the last max node passed
+        /// Root node will always be a visible node
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <param name="max"></param>
+        public void CountTheNumberOfvisibleNodes(Node rootNode, int max)
+        {
+            if (rootNode == null)
+            {
+                return;
+            }
+
+            if (rootNode != null && rootNode.Data >= max)
+            {
+                Count++;
+                max = Math.Max((int)rootNode.Data, (int)max);
+            }
+            Console.Write(rootNode.Data + " ");
+            CountTheNumberOfvisibleNodes(rootNode.LeftNode, max);
+            CountTheNumberOfvisibleNodes(rootNode.RightNode, max);
+
+        }
+
+        /// <summary>
+        /// Simple idea is to do a preorder traversal and compare every node.
+        /// </summary>
+        /// <param name="firstTree"></param>
+        /// <param name="secondTree"></param>
+        /// <returns></returns>
+        public bool CheckIfTwoTreesAreIdentical(Node firstTree, Node secondTree)
+        {
+            //both trees are null and hence same
+            if (firstTree == null && secondTree == null)
+            {
+                return true;
+            }
+            else if (firstTree == null)
+            {
+                return false;
+            }
+            else if (secondTree == null)
+            {
+                return false;
+            }
+            else
+            {
+                Stack<Node> firstStack = new Stack<Node>();
+                Stack<Node> secondStack = new Stack<Node>();
+                firstStack.Push(firstTree);
+                secondStack.Push(secondTree);
+                while (firstStack.Count > 0 && secondStack.Count > 0)
+                {
+                    var firstchild = firstStack.Pop();
+                    var secondChild = secondStack.Pop();
+                    if (firstchild.Data != secondChild.Data)
+                    {
+                        return false;
+                    }
+                    if (firstchild.RightNode != null)
+                        firstStack.Push(firstchild.RightNode);
+                    if (firstchild.LeftNode != null)
+                        firstStack.Push(firstchild.LeftNode);
+                    if (secondChild.RightNode != null)
+                        secondStack.Push(secondChild.RightNode);
+                    if (secondChild.LeftNode != null)
+                        secondStack.Push(secondChild.LeftNode);
+
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Simple idea is to do a preorder traversal and compare every node.
+        /// </summary>
+        /// <param name="firstTree"></param>
+        /// <param name="secondTree"></param>
+        /// <returns></returns>
+        public bool CheckIfTwoTreesAreIdenticalRecursion(Node firstTree, Node secondTree)
+        {
+            //both trees are null and hence same
+            if (firstTree == null && secondTree == null)
+            {
+                return true;
+            }
+            else if (firstTree == null)
+            {
+                return false;
+            }
+            else if (secondTree == null)
+            {
+                return false;
+            }
+            if (firstTree != null && secondTree != null)
+            {
+                if (firstTree.Data != secondTree.Data)
+                {
+                    return false;
+                }
+                TraversePreOrderRecursion(firstTree.LeftNode);
+                TraversePreOrderRecursion(secondTree.LeftNode);
+                TraversePreOrderRecursion(firstTree.RightNode);
+                TraversePreOrderRecursion(secondTree.RightNode);
+            }
+            return true;
+
+        }
+
+        /// <summary>
+        /// This is a combination of level order traversal and storing horizontal distance in hashtable/dictionary
+        /// we will first put root node as value in dictionary
+        /// then when we enqueue the left child we will put the key as horizontal distance of root -1
+        /// then when we enqueue the right child we will put the key as horizontal distance of root +1
+        /// </summary>
+        public void VerticalOrderTraversal(Node rootNode)
+        {
+            Queue<Node> queue = new Queue<Node>();
+            Dictionary<int, List<int?>> dict = new Dictionary<int, List<int?>>();
+
+            if (queue.Count == 0 && rootNode != null)
+            {
+                queue.Enqueue(rootNode);
+                dict.Add(0, new List<int?> { rootNode.Data });
+            }
+            while (queue.Count > 0)
+            {
+                if (queue.Peek() != null)
+                {
+                    if (queue.Peek().LeftNode != null)
+                    {
+                        queue.Enqueue(queue.Peek().LeftNode);
+
+                        foreach (var keyValuePair in dict)
+                        {
+                            if (keyValuePair.Value.Contains(queue.Peek().Data))
+                            {
+                                if (!dict.ContainsKey(keyValuePair.Key - 1))
+                                {
+                                    dict.Add(keyValuePair.Key - 1, new List<int?> { queue.Peek().LeftNode.Data });
+                                    break;
+                                }
+                                else
+                                {
+                                    dict[keyValuePair.Key - 1].Add(queue.Peek().LeftNode.Data);
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+                    if (queue.Peek().RightNode != null)
+                    {
+                        queue.Enqueue(queue.Peek().RightNode);
+                        foreach (var keyValuePair in dict)
+                        {
+                            if (keyValuePair.Value.Contains(queue.Peek().Data))
+                            {
+                                if (!dict.ContainsKey(keyValuePair.Key + 1))
+                                {
+                                    dict.Add(keyValuePair.Key + 1, new List<int?> { queue.Peek().RightNode.Data });
+                                    break;
+                                }
+                                else
+                                {
+                                    dict[keyValuePair.Key + 1].Add(queue.Peek().RightNode.Data);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    queue.Dequeue();
+                }
+            }
+            foreach (var pair in dict)
+            {
+                Console.Write(pair.Key + ": ");
+                foreach (var val in pair.Value)
+                {
+                    Console.Write(val + ", ");
+                }
+                Console.WriteLine("\n");
+            }
+
+
+        }
+        /// <summary>
+        /// This is done using vertical order traversal
+        /// The idea is to keep replacing values of the key with the newer values for the same key
+        /// At the end whatever is left will be bottom view
+        /// </summary>
+        /// <param name="rootNode"></param>
+        public void BottomViewOfBinayTree(Node rootNode)
+        {
+            Queue<Node> queue = new Queue<Node>();
+            SortedDictionary<int, int> dict = new SortedDictionary<int, int>();
+
+            if (queue.Count == 0 && rootNode != null)
+            {
+                queue.Enqueue(rootNode);
+                dict.Add(0, (int)rootNode.Data);
+            }
+            while (queue.Count > 0)
+            {
+                if (queue.Peek() != null)
+                {
+                    if (queue.Peek().LeftNode != null)
+                    {
+                        queue.Enqueue(queue.Peek().LeftNode);
+                        dict[dict.FirstOrDefault(x => x.Value == (int)queue.Peek().Data).Key - 1] = (int)queue.Peek().LeftNode.Data;
+                    }
+                    if (queue.Peek().RightNode != null)
+                    {
+                        queue.Enqueue(queue.Peek().RightNode);
+                        dict[dict.FirstOrDefault(x => x.Value == (int)queue.Peek().Data).Key + 1] = (int)queue.Peek().RightNode.Data;
+                    }
+
+                    queue.Dequeue();
+                }
+            }
+            foreach (var pair in dict)
+            {
+                Console.WriteLine(pair.Value);
+            }
+
+        }
+        /// This is done using vertical order traversal
+        /// The idea is to put the horizontal distance for the first time for a key and then never replace it
+        /// At the end whatever is left will be bottom view
+        public void TopViewOfBinayTree(Node rootNode)
+        {
+            Queue<Node> queue = new Queue<Node>();
+            SortedDictionary<int, int> dict = new SortedDictionary<int, int>();
+
+            if (queue.Count == 0 && rootNode != null)
+            {
+                queue.Enqueue(rootNode);
+                dict.Add(0, (int)rootNode.Data);
+            }
+            while (queue.Count > 0)
+            {
+                if (queue.Peek() != null)
+                {
+                    if (queue.Peek().LeftNode != null)
+                    {
+                        queue.Enqueue(queue.Peek().LeftNode);
+                        if (!dict.ContainsKey(dict.FirstOrDefault(x => x.Value == (int)queue.Peek().Data).Key - 1))
+                            dict[dict.FirstOrDefault(x => x.Value == (int)queue.Peek().Data).Key - 1] = (int)queue.Peek().LeftNode.Data;
+                    }
+                    if (queue.Peek().RightNode != null)
+                    {
+                        queue.Enqueue(queue.Peek().RightNode);
+                        if (!dict.ContainsKey(dict.FirstOrDefault(x => x.Value == (int)queue.Peek().Data).Key + 1))
+                            dict[dict.FirstOrDefault(x => x.Value == (int)queue.Peek().Data).Key + 1] = (int)queue.Peek().RightNode.Data;
+                    }
+
+                    queue.Dequeue();
+                }
+            }
+            foreach (var pair in dict)
+            {
+                Console.WriteLine(pair.Value);
+            }
+
+        }
+
+        /// <summary>
+        /// This is solved using recursion 
+        /// Store node in a temp value. Do sum of left subtree and right subtree and then add to node and return
+        /// </summary>
+        /// <param name="rootNode"></param>
+        public int InSumTree(Node rootNode)
+        {
+
+            if (rootNode != null)
+            {
+                int? val = rootNode.Data;
+                rootNode.Data = InSumTree(rootNode.LeftNode) + InSumTree(rootNode.RightNode);
+                return (int)(rootNode.Data + val);
+
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// We will solve this using level order traversal.
+        /// We will create a dictionary with key as node data and value as a string of format Level-Parent
+        /// Once the dictionary is filled, we will parse through dictionary and find the cousins
+        /// </summary>
+        /// <param name="rootNode"></param>
+        public void FindAllCousinsInBinaryTree(Node rootNode)
+        {
+
+            Queue<Node> queue = new Queue<Node>();
+            Dictionary<int?, string> dict = new Dictionary<int?, string>();
+            if (rootNode == null)
+            {
+                return;
+            }
+
+            if (queue.Count == 0 && rootNode != null)
+            {
+                queue.Enqueue(rootNode);
+                dict.Add(rootNode.Data, "1-null");
+                queue.Enqueue(null);
+            }
+
+            while (queue.Count > 0)
+            {
+                if (queue.Peek() != null)
+                {
+                    if (queue.Peek().LeftNode != null)
+                    {
+                        if (!dict.ContainsKey(queue.Peek().LeftNode.Data))
+                        {
+                            string val = (Convert.ToInt32(dict[queue.Peek().Data].Split("-")[0]) + 1).ToString() + "-" + queue.Peek().Data;
+                            dict.Add(queue.Peek().LeftNode.Data, val);
+                        }
+                        queue.Enqueue(queue.Peek().LeftNode);
+                    }
+                    if (queue.Peek().RightNode != null)
+                    {
+                        if (!dict.ContainsKey(queue.Peek().RightNode.Data))
+                        {
+                            string val = (Convert.ToInt32(dict[queue.Peek().Data].Split("-")[0]) + 1).ToString() + "-" + queue.Peek().Data;
+                            dict.Add(queue.Peek().RightNode.Data, val);
+                        }
+                        queue.Enqueue(queue.Peek().RightNode);
+                    }
+                    queue.Dequeue();
+
+                }
+                else if (queue.Peek() == null)
+                {
+                    queue.Dequeue();
+                    if (queue.Count > 0 && queue.Peek() != null)
+                        queue.Enqueue(null);
+                }
+            }
+            //parse through dictionary and print the cousins
+            foreach(var pair in dict)
+            {
+                var cousins = dict.Select(x => x.Value.Split("-")[0] == pair.Value.Split("-")[0] && x.Value.Split("-")[1] != pair.Value.Split("-")[1]).ToList();
+                if (cousins.Contains(true))
+                {
+                    for (int i = 0; i < cousins.Count; i++)
+                    {
+                        if (cousins[i] == true)
+                        {
+                            Console.Write(dict.ElementAt(i).Key + "-");
+                        }
+                    }
+                    Console.Write(pair.Key);
+                    Console.WriteLine("");
+                }
+                dict.Remove(pair.Key);
+            }
+        }
+
+        public void FindCousinOfGivenNodeInBinaryTree(Node rootNode, int data)
+        {
+            Queue<Node> queue = new Queue<Node>();
+            Dictionary<int?, string> dict = new Dictionary<int?, string>();
+            if (rootNode == null || rootNode.Data==data)
+            {
+                return;
+            }
+
+            if (queue.Count == 0 && rootNode != null)
+            {
+                queue.Enqueue(rootNode);
+                dict.Add(rootNode.Data, "1-null");
+                queue.Enqueue(null);
+            }
+            while (queue.Count > 0)
+            {
+                if (queue.Peek() != null)
+                {
+                    if (queue.Peek().LeftNode != null)
+                    {
+                        if (!dict.ContainsKey(queue.Peek().LeftNode.Data))
+                        {
+                            string val = (Convert.ToInt32(dict[queue.Peek().Data].Split("-")[0]) + 1).ToString() + "-" + queue.Peek().Data;
+                            dict.Add(queue.Peek().LeftNode.Data, val);
+                        }
+                        queue.Enqueue(queue.Peek().LeftNode);
+                    }
+                    if (queue.Peek().RightNode != null)
+                    {
+                        if (!dict.ContainsKey(queue.Peek().RightNode.Data))
+                        {
+                            string val = (Convert.ToInt32(dict[queue.Peek().Data].Split("-")[0]) + 1).ToString() + "-" + queue.Peek().Data;
+                            dict.Add(queue.Peek().RightNode.Data, val);
+                        }
+                        queue.Enqueue(queue.Peek().RightNode);
+                    }
+                    queue.Dequeue();
+
+                }
+                else if (queue.Peek() == null)
+                {
+                    queue.Dequeue();
+                    if (queue.Count > 0 && queue.Peek() != null)
+                        queue.Enqueue(null);
+                }
+            }
+            var level = dict[data].Split("-")[0];
+            var parent = dict[data].Split("-")[1];
+            var cousins = dict.Select(x => x.Value.Split("-")[0] == level && x.Value.Split("-")[1] != parent).ToList();
+            for(int i=0;i<cousins.Count;i++)
+            {
+                if(cousins[i]==true)
+                {
+                    Console.WriteLine(dict.ElementAt(i).Key);
+                }
+            }
+        }
+
+        public int IsSumTree(Node rootNode,out bool isSumTree)
+        {
+            isSumTree = true;
+            if (rootNode != null)
+            {
+                int? val = rootNode.Data;
+                //Calculate the sum of left tree and right tree and compare against root node
+                var leftNodeSum = InSumTree(rootNode.LeftNode);
+                var rightNodeSum = InSumTree(rootNode.RightNode);
+                if (rootNode.Data == leftNodeSum + rightNodeSum)
+                {
+                    isSumTree = isSumTree && true;
+                    rootNode.Data = rootNode.Data + leftNodeSum + rightNodeSum;
+                }
+                else
+                {
+                    isSumTree = isSumTree && false;
+                }
+                return (int)(rootNode.Data + val);
+
+            }
+            return 0;
+        }
 
     }
 }
