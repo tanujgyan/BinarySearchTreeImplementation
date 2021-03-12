@@ -13,6 +13,7 @@ namespace BinarySearchTreeImplementation
         private Node rightLeafNode = new Node();
         public Node LastLeafNode = new Node();
         public int Count { get; set; }
+        public List<Node> sList = new List<Node>();
         public void Add(int value)
         {
             if (this.Root == null)
@@ -514,13 +515,13 @@ namespace BinarySearchTreeImplementation
         ///             8. if queue contains only null values this will be end of loop. if not enqueue null
         /// </summary>
         /// <param name="rootNode"></param>
-        public void HeightOfBinarySearchTree(Node rootNode)
+        public int HeightOfBinarySearchTree(Node rootNode)
         {
             int height = -1;
             Queue<Node> queue = new Queue<Node>();
             if (rootNode == null)
             {
-                return;
+                return 0;
             }
 
             if (queue.Count == 0 && rootNode != null)
@@ -546,7 +547,8 @@ namespace BinarySearchTreeImplementation
                         queue.Enqueue(null);
                 }
             }
-            Console.WriteLine("Height of tree is " + height);
+            //Console.WriteLine("Height of tree is " + height);
+            return height;
 
         }
 
@@ -1152,6 +1154,95 @@ namespace BinarySearchTreeImplementation
 
             }
             return 0;
+        }
+
+        /// <summary>
+        /// A perfect binary tree has 2^h nodes at height h
+        /// The idea is to check the formula we increase the height and if a mismatch is found return false otherwise continue
+        /// </summary>
+        /// <param name="rootNode"></param>
+        public Node IsPerfectBinaryTree(Node rootNode)
+        {
+            
+            int height = 0;
+            Queue<Node> queue = new Queue<Node>();
+            if (rootNode == null)
+            {
+                return null;
+            }
+            if(rootNode.LeftNode==null && rootNode.RightNode==null)
+            {
+                return rootNode;
+            }
+            if (queue.Count == 0 && rootNode != null)
+            {
+                queue.Enqueue(rootNode);
+                queue.Enqueue(null);
+            }
+
+            while (queue.Count > 0)
+            {
+                if (queue.Peek() != null)
+                {
+                    if (queue.Peek().LeftNode != null) queue.Enqueue(queue.Peek().LeftNode);
+                    if (queue.Peek().RightNode != null) queue.Enqueue(queue.Peek().RightNode);
+                    queue.Dequeue();
+
+                }
+                else if (queue.Peek() == null)
+                {
+                    queue.Dequeue();
+                    height++;
+                    //check if the formula is valid
+                    if(queue.Count(x=>x!=null)==Math.Pow(2,height))
+                    {
+                        //returnVal = true;
+                    }
+                    //queue has some children and formula is not valid
+                    else if(queue.Count!=0)
+                    {
+                        //this means its not a perfect binary tree
+                        height = -2;
+                        return null;
+                    }
+                    if (queue.Count > 0 && queue.Peek() != null)
+                        queue.Enqueue(null);
+                }
+            }
+            //return the height if its a perfect binary tree
+            return rootNode;
+        }
+
+        public void FindBiggestPerfectBinaryTree(Node rootNode)
+        {
+            Node returnedNode = new Node();
+            
+            if (rootNode != null)
+            {
+                returnedNode = IsPerfectBinaryTree(rootNode);
+                if (returnedNode!= null)
+                    sList.Add(returnedNode);
+                FindBiggestPerfectBinaryTree(rootNode.LeftNode);
+                //Console.Write(rootNode.Data + " ");
+                FindBiggestPerfectBinaryTree(rootNode.RightNode);
+            }
+        }
+        public int DiameterOfBinaryTree(Node rootNode)
+        {
+            int leftHeight = 0, rightHeight = 0;
+            if (rootNode==null)
+            {
+                return 0;
+            }
+            if(rootNode.LeftNode!=null)
+                leftHeight= HeightOfBinarySearchTree(rootNode.LeftNode)+1;
+            if (rootNode.RightNode != null)
+                rightHeight= HeightOfBinarySearchTree(rootNode.RightNode)+1;
+           
+            int leftDiameter = DiameterOfBinaryTree(rootNode.LeftNode);
+            int rightDiameter = DiameterOfBinaryTree(rootNode.RightNode);
+            int finalDiameter = Math.Max(leftHeight + rightHeight + 1, Math.Max(leftDiameter, rightDiameter));
+            return finalDiameter;
         }
 
     }

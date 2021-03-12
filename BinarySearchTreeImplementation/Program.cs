@@ -144,8 +144,13 @@ namespace BinarySearchTreeImplementation
             //binaryTree.FindAllCousinsInBinaryTree(binaryTree.Root);
             // binaryTree.FindCousinOfGivenNodeInBinaryTree(binaryTree.Root,4);
 
-            binaryTree.IsSumTree(binaryTree.Root, out bool isSumTree);
-            Console.WriteLine(isSumTree);
+            // binaryTree.IsSumTree(binaryTree.Root, out bool isSumTree);
+            //Console.WriteLine(isSumTree);
+            //Console.WriteLine(binaryTree.IsPerfectBinaryTree(binaryTree.Root));
+            // binaryTree.FindBiggestPerfectBinaryTree(binaryTree.Root);
+            //Console.WriteLine(binaryTree.sList);
+            Console.WriteLine(binaryTree.DiameterOfBinaryTree(binaryTree.Root)); 
+            
 
         }
     }
