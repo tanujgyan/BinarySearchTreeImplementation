@@ -125,28 +125,43 @@ namespace BinarySearchTreeImplementation
             //binaryTree.VerticalOrderTraversal(CreateSampleTree2().Root);
             //binaryTree.BottomViewOfBinayTree(CreateSampleTree2().Root);
             // binaryTree.TopViewOfBinayTree(CreateSampleTree().Root);
-           
-            binaryTree.Root = new Node();
-            binaryTree.Root.Data = 44;
-            binaryTree.Root.LeftNode = new Node();
-            binaryTree.Root.LeftNode.Data = 9;
-            binaryTree.Root.RightNode = new Node();
-            binaryTree.Root.RightNode.Data = 9;
-            BinaryTree binaryTree2 = new BinaryTree();
-            binaryTree2.Root = new Node();
-            binaryTree2.Root.Data = 44;
-            binaryTree2.Root.LeftNode = new Node();
-            binaryTree2.Root.LeftNode.Data = 13;
-            binaryTree2.Root.RightNode = new Node();
-            binaryTree2.Root.RightNode.Data = 9;
-            binaryTree.Root.LeftNode.LeftNode = new Node();
-            binaryTree.Root.LeftNode.LeftNode.Data = 4;
+            //BinaryTree binaryTree2 = new BinaryTree();
+            //binaryTree2.Root = new Node();
+            //binaryTree2.Root.Data = 44;
+            //binaryTree2.Root.LeftNode = new Node();
+            //binaryTree2.Root.LeftNode.Data = 13;
+            //binaryTree2.Root.RightNode = new Node();
+            //binaryTree2.Root.RightNode.Data = 9;
+            // binaryTree.Root.LeftNode.LeftNode = new Node();
+            // binaryTree.Root.LeftNode.LeftNode.Data = 4;
+            // binaryTree.Root.LeftNode.LeftNode.LeftNode = new Node();
+            //binaryTree.Root.LeftNode.LeftNode.LeftNode.Data = 5;
             //binaryTree.Root.LeftNode.RightNode = new Node();
             //binaryTree.Root.LeftNode.RightNode.Data = 5;
+            binaryTree.Root = new Node();
+            binaryTree.Root.Data = 1;
+            binaryTree.Root.LeftNode = new Node();
+            binaryTree.Root.LeftNode.Data = 2;
+            binaryTree.Root.RightNode = new Node();
+            binaryTree.Root.RightNode.Data = 3;
+            binaryTree.Root.LeftNode.RightNode = new Node();
+            binaryTree.Root.LeftNode.RightNode.Data = 4;
             binaryTree.Root.RightNode.LeftNode = new Node();
-            binaryTree.Root.RightNode.LeftNode.Data = 4;
-            //binaryTree.Root.RightNode.RightNode = new Node();
-            //binaryTree.Root.RightNode.RightNode.Data = 7;
+            binaryTree.Root.RightNode.LeftNode.Data = 5;
+            binaryTree.Root.RightNode.LeftNode.LeftNode = new Node();
+            binaryTree.Root.RightNode.LeftNode.LeftNode.Data = 7;
+            binaryTree.Root.RightNode.LeftNode.RightNode = new Node();
+            binaryTree.Root.RightNode.LeftNode.RightNode.Data = 8;
+            binaryTree.Root.RightNode.RightNode = new Node();
+            binaryTree.Root.RightNode.RightNode.Data = 6;
+            binaryTree.Root.LeftNode.LeftNode = new Node();
+            binaryTree.Root.LeftNode.LeftNode.Data = 11;
+            ////binaryTree.Root.RightNode.RightNode.LeftNode = new Node();
+            //binaryTree.Root.RightNode.RightNode.LeftNode.Data = 9;
+            //binaryTree.Root.RightNode.RightNode.RightNode = new Node();
+            //binaryTree.Root.RightNode.RightNode.RightNode.Data = 10;
+            //binaryTree.Root.RightNode.RightNode.RightNode.LeftNode = new Node();
+            //binaryTree.Root.RightNode.RightNode.RightNode.LeftNode.Data = 11;
             // binaryTree.InSumTree(binaryTree.Root);
             //binaryTree.FindAllCousinsInBinaryTree(binaryTree.Root);
             // binaryTree.FindCousinOfGivenNodeInBinaryTree(binaryTree.Root,4);
@@ -154,13 +169,24 @@ namespace BinarySearchTreeImplementation
             // binaryTree.IsSumTree(binaryTree.Root, out bool isSumTree);
             //Console.WriteLine(isSumTree);
             //Console.WriteLine(binaryTree.IsPerfectBinaryTree(binaryTree.Root));
-            // binaryTree.FindBiggestPerfectBinaryTree(binaryTree.Root);
+            binaryTree.RemoveAllHalfNodes(binaryTree.Root);
+            binaryTree.FindBiggestPerfectBinaryTree(binaryTree.Root);
+           // int maxHeight = 0;
+            //foreach(var s in binaryTree.sList)
+            //{
+            //    maxHeight = Math.Max( binaryTree.HeightOfBinarySearchTree(s),maxHeight);
+            //}
+            //Console.WriteLine(binaryTree.sList);
             //Console.WriteLine(binaryTree.sList);
             //Console.WriteLine(binaryTree.DiameterOfBinaryTree(binaryTree.Root)); 
             // Console.WriteLine(binaryTree.CheckIfTwoBinaryTreesAreMirror(binaryTree.Root,binaryTree2.Root));
-            Console.WriteLine(binaryTree.CheckIfABinaryTreeIsSymmetric(binaryTree.Root));
-
-
+            //Console.WriteLine(binaryTree.CheckIfABinaryTreeIsSymmetric(binaryTree.Root));
+            //binaryTree.LevelOrderTraversalUsingQueueLevelByLevel(binaryTree.Root);
+            //binaryTree.SwapChildrenOfTheNode(binaryTree.Root);
+            //binaryTree.LevelOrderTraversalUsingQueueLevelByLevel(binaryTree.Root);
+            //binaryTree.MaximumDescendingPathOfATree(binaryTree.Root);
+            //Console.WriteLine("Finished");
+            //binaryTree.RemoveAllHalfNodes(binaryTree.Root);
         }
     }
 }

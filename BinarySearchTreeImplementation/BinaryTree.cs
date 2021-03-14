@@ -14,6 +14,7 @@ namespace BinarySearchTreeImplementation
         public Node LastLeafNode = new Node();
         public int Count { get; set; }
         public List<Node> sList = new List<Node>();
+        public int Height { get; set; } = 0;
         public void Add(int value)
         {
             if (this.Root == null)
@@ -1054,7 +1055,7 @@ namespace BinarySearchTreeImplementation
                 }
             }
             //parse through dictionary and print the cousins
-            foreach(var pair in dict)
+            foreach (var pair in dict)
             {
                 var cousins = dict.Select(x => x.Value.Split("-")[0] == pair.Value.Split("-")[0] && x.Value.Split("-")[1] != pair.Value.Split("-")[1]).ToList();
                 if (cousins.Contains(true))
@@ -1077,7 +1078,7 @@ namespace BinarySearchTreeImplementation
         {
             Queue<Node> queue = new Queue<Node>();
             Dictionary<int?, string> dict = new Dictionary<int?, string>();
-            if (rootNode == null || rootNode.Data==data)
+            if (rootNode == null || rootNode.Data == data)
             {
                 return;
             }
@@ -1123,16 +1124,16 @@ namespace BinarySearchTreeImplementation
             var level = dict[data].Split("-")[0];
             var parent = dict[data].Split("-")[1];
             var cousins = dict.Select(x => x.Value.Split("-")[0] == level && x.Value.Split("-")[1] != parent).ToList();
-            for(int i=0;i<cousins.Count;i++)
+            for (int i = 0; i < cousins.Count; i++)
             {
-                if(cousins[i]==true)
+                if (cousins[i] == true)
                 {
                     Console.WriteLine(dict.ElementAt(i).Key);
                 }
             }
         }
 
-        public int IsSumTree(Node rootNode,out bool isSumTree)
+        public int IsSumTree(Node rootNode, out bool isSumTree)
         {
             isSumTree = true;
             if (rootNode != null)
@@ -1163,14 +1164,14 @@ namespace BinarySearchTreeImplementation
         /// <param name="rootNode"></param>
         public Node IsPerfectBinaryTree(Node rootNode)
         {
-            
+
             int height = 0;
             Queue<Node> queue = new Queue<Node>();
             if (rootNode == null)
             {
                 return null;
             }
-            if(rootNode.LeftNode==null && rootNode.RightNode==null)
+            if (rootNode.LeftNode == null && rootNode.RightNode == null)
             {
                 return rootNode;
             }
@@ -1194,12 +1195,12 @@ namespace BinarySearchTreeImplementation
                     queue.Dequeue();
                     height++;
                     //check if the formula is valid
-                    if(queue.Count(x=>x!=null)==Math.Pow(2,height))
+                    if (queue.Count(x => x != null) == Math.Pow(2, height))
                     {
                         //returnVal = true;
                     }
                     //queue has some children and formula is not valid
-                    else if(queue.Count!=0)
+                    else if (queue.Count != 0)
                     {
                         //this means its not a perfect binary tree
                         height = -2;
@@ -1216,11 +1217,11 @@ namespace BinarySearchTreeImplementation
         public void FindBiggestPerfectBinaryTree(Node rootNode)
         {
             Node returnedNode = new Node();
-            
+
             if (rootNode != null)
             {
                 returnedNode = IsPerfectBinaryTree(rootNode);
-                if (returnedNode!= null)
+                if (returnedNode != null)
                     sList.Add(returnedNode);
                 FindBiggestPerfectBinaryTree(rootNode.LeftNode);
                 //Console.Write(rootNode.Data + " ");
@@ -1240,15 +1241,15 @@ namespace BinarySearchTreeImplementation
         public int DiameterOfBinaryTree(Node rootNode)
         {
             int leftHeight = 0, rightHeight = 0;
-            if (rootNode==null)
+            if (rootNode == null)
             {
                 return 0;
             }
-            if(rootNode.LeftNode!=null)
-                leftHeight= HeightOfBinarySearchTree(rootNode.LeftNode)+1;
+            if (rootNode.LeftNode != null)
+                leftHeight = HeightOfBinarySearchTree(rootNode.LeftNode) + 1;
             if (rootNode.RightNode != null)
-                rightHeight= HeightOfBinarySearchTree(rootNode.RightNode)+1;
-           
+                rightHeight = HeightOfBinarySearchTree(rootNode.RightNode) + 1;
+
             int leftDiameter = DiameterOfBinaryTree(rootNode.LeftNode);
             int rightDiameter = DiameterOfBinaryTree(rootNode.RightNode);
             int finalDiameter = Math.Max(leftHeight + rightHeight + 1, Math.Max(leftDiameter, rightDiameter));
@@ -1270,7 +1271,7 @@ namespace BinarySearchTreeImplementation
         /// <returns></returns>
         public bool CheckIfTwoBinaryTreesAreMirror(Node rootNode1, Node rootNode2)
         {
-            if(rootNode1==null && rootNode2==null)
+            if (rootNode1 == null && rootNode2 == null)
             {
                 return true;
             }
@@ -1278,9 +1279,9 @@ namespace BinarySearchTreeImplementation
             {
                 return false;
             }
-            if(rootNode1.Data==rootNode2.Data)
+            if (rootNode1.Data == rootNode2.Data)
             {
-                if(CheckIfTwoBinaryTreesAreMirror(rootNode1.LeftNode,rootNode2.RightNode)&&CheckIfTwoBinaryTreesAreMirror(rootNode1.RightNode,rootNode2.LeftNode))
+                if (CheckIfTwoBinaryTreesAreMirror(rootNode1.LeftNode, rootNode2.RightNode) && CheckIfTwoBinaryTreesAreMirror(rootNode1.RightNode, rootNode2.LeftNode))
                 {
                     return true;
                 }
@@ -1294,11 +1295,11 @@ namespace BinarySearchTreeImplementation
         /// <returns></returns>
         public bool CheckIfABinaryTreeIsSymmetric(Node rootNode)
         {
-            if(rootNode==null)
+            if (rootNode == null)
             {
                 return false;
             }
-            if(rootNode.LeftNode==null && rootNode.RightNode==null)
+            if (rootNode.LeftNode == null && rootNode.RightNode == null)
             {
                 return true;
             }
@@ -1307,6 +1308,141 @@ namespace BinarySearchTreeImplementation
                 return false;
             }
             return CheckIfTwoBinaryTreesAreMirror(rootNode.LeftNode, rootNode.RightNode);
+        }
+
+        /// <summary>
+        /// The idea is to simply do a post order traversal and then swap the left and right child 
+        /// by calling the swap method
+        /// </summary>
+        /// <param name="rootNode"></param>
+        public void ConvertBinaryTreeToMirror(Node rootNode)
+        {
+            if (rootNode == null)
+            {
+                return;
+            }
+            ConvertBinaryTreeToMirror(rootNode.LeftNode);
+            ConvertBinaryTreeToMirror(rootNode.RightNode);
+            SwapChildrenOfTheNode(rootNode);
+        }
+        /// <summary>
+        /// This is a utility function that swaps the left and right node of root
+        /// </summary>
+        /// <param name="node"></param>
+        public void SwapChildrenOfTheNode(Node node)
+        {
+            Node tempNode = new Node();
+            if (node == null)
+            {
+                return;
+            }
+            tempNode = node.LeftNode;
+            node.LeftNode = node.RightNode;
+            node.RightNode = tempNode;
+        }
+
+        public void MaximumDescendingPathOfATree(Node node)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            Node tempNode = node;
+            int height=0;
+            if (node == null)
+            {
+                return;
+            }
+            stack.Push(node);
+            while (tempNode.LeftNode != null)
+            {
+                stack.Push(tempNode.LeftNode);
+                tempNode = tempNode.LeftNode;
+            }
+            height = 0;
+            while (stack.Count != 1)
+            {
+                Console.Write(stack.Pop().Data+" - " ); 
+                
+                height++;
+            }
+            Console.Write(stack.Peek().Data);
+            Console.WriteLine("\n");
+            Height = Math.Max(height, Height);
+            height = 0;
+            tempNode= stack.Peek();
+            if (tempNode.RightNode != null)
+            {
+                stack.Push(tempNode.RightNode);
+                tempNode = tempNode.RightNode;
+            }
+            
+            while (stack.Count != 1)
+            {
+                Console.Write(stack.Pop().Data + " - ");
+                height++;
+            }
+            Console.Write(stack.Peek().Data);
+            Console.WriteLine("\n");
+            Height = Math.Max(height, Height);
+            height = 0;
+            if (node.LeftNode != null)
+                MaximumDescendingPathOfATree(node.LeftNode);
+            if (node.RightNode != null)
+                MaximumDescendingPathOfATree(node.RightNode);
+        }
+
+        public Node RemoveAllHalfNodes(Node node)
+        {
+            Queue<Node> queue = new Queue<Node>();
+            if(node==null)
+            {
+                return node;
+            }
+            if(node.LeftNode == null && node.RightNode == null)
+            {
+                return node;
+            }
+            if(node.LeftNode==null || node.RightNode==null)
+            {
+                if(node.LeftNode==null)
+                {
+                    node.RightNode = null;
+                }
+                else
+                {
+                    node.LeftNode = null;
+                }
+                return node;
+            }
+            else
+            {
+                queue.Enqueue(node);
+                while (queue.Count > 0)
+                {
+                    if (queue.Peek().LeftNode == null && queue.Peek().RightNode == null)
+                    {
+                        queue.Dequeue();
+                        
+                    }
+                   else if (queue.Peek().RightNode == null && queue.Peek().LeftNode != null)
+                    {
+                       
+                        queue.Peek().LeftNode = null;
+                    }
+                    else if (queue.Peek().RightNode != null && queue.Peek().LeftNode == null)
+                    {
+                        
+                        queue.Peek().RightNode = null;
+                    }
+                    else
+                    {
+                        queue.Enqueue(queue.Peek().LeftNode);
+                        queue.Enqueue(queue.Peek().RightNode);
+                        queue.Dequeue();
+                    }
+                    
+                }
+                return node;
+            }
+
         }
     }
 }
